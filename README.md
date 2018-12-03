@@ -1,27 +1,89 @@
 # Chat
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.6.
+A live chat project.
 
-## Development server
+## To Run
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- Option 1
 
-## Code scaffolding
+```bash
+ng s --open
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Option 2
 
-## Build
+  Install live-server and serve the build output.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+terminal 1
 
-## Running unit tests
+```bash
+npm run build::prod
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```
 
-## Running end-to-end tests
+terminal 2
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+```bash
+live-server --open=dist/chate/index.html
+```
 
-## Further help
+## Goals
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+- To create a live chat.
+
+## Explanation
+
+- Install @webcomponents/custom-elements
+
+```bash
+npm i --save @webcomponents/custom-elements
+```
+
+- Copy the following code in pollyfills.ts.
+
+```code
+...
+/***************************************************************************************************
+ * BROWSER POLYFILLS
+ */
+
+// Used for browsers with partially native support of Custom Elements
+import '@webcomponents/custom-elements/src/native-shim';
+
+// Used for browsers without a native support of Custom Elements
+import '@webcomponents/custom-elements/custom-elements.min';
+
+...
+/***************************************************************************************************
+ * APPLICATION IMPORTS
+ */
+
+(window as any).global = window;
+
+```
+
+- Set up angular element in app.module.ts
+
+* Note: that do not boostrap any component in NgModule decorator this will cause error. because we are boostrapping the custom element already in ngDoBoostrap.
+
+```code
+...
+import { createCustomElement } from '@angular/elements';
+...
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, AppRoutingModule],
+  entryComponents: [AppComponent],
+  providers: []
+})
+
+export class AppModule {
+  constructor(private injector: Injector) {}
+
+  ngDoBootstrap() {
+    const el = createCustomElement(AppComponent, { injector: this.injector });
+    customElements.define('chat-app', el);
+  }
+}
+```
