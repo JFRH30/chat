@@ -64,7 +64,7 @@ import '@webcomponents/custom-elements/custom-elements.min';
 
 - Set up angular element in app.module.ts
 
-* Note: that do not boostrap any component in NgModule decorator this will cause error. because we are boostrapping the custom element already in ngDoBoostrap.
+- Note: that do not boostrap any component in NgModule decorator because we are boostrapping the custom element already in ngDoBoostrap.
 
 ```code
 ...
